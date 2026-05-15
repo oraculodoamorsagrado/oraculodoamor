@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>O Oráculo do Amor — O universo já sabe o que seu amor precisa</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --night:#08011A;
+  --deep:#0D0228;
+  --plum:#1E053D;
+  --blood:#6B0F2A;
+  --rose:#A01840;
+  --gold:#C9A432;
+  --gold2:#E8C84A;
+  --silver:#C8C0D8;
+  --parchment:#F5E8D0;
+  --cream:#FAF3E8;
+  --text-dark:#1A0530;
+  --text-light:#EDE0FF;
+  --muted-light:rgba(200,192,216,0.75);
+  --border-gold:rgba(201,164,50,0.3);
+  --border-light:rgba(201,164,50,0.15);
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:'EB Garamond',Georgia,serif;
+  background:var(--night);
+  color:var(--text-light);
+  min-height:100vh;
+  cursor:default;
+}
+#app{max-width:640px;margin:0 auto;padding-bottom:5rem}
+
+/* ── STARS ──────────────────────────── */
+.starfield{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.star{position:absolute;background:#fff;border-radius:50%;animation:twinkle var(--d,3s) ease-in-out infinite var(--delay,0s)}
+@keyframes twinkle{0%,100%{opacity:.15;transform:scale(1)}50%{opacity:var(--op,.8);transform:scale(1.4)}}
+
+/* ── HERO ──────────────────────────── */
+.hero{
+  position:relative;z-index:1;
+  background:radial-gradient(ellipse at 50% 0%, #2A0550 0%, #0D0228 55%, var(--night) 100%);
+  padding:3rem 2rem 4rem;
+  text-align:center;
+  overflow:hidden;
+  border-bottom:1px solid var(--border-gold);
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='50' cy='50' r='48' fill='none' stroke='%23C9A432' stroke-width='0.2' stroke-dasharray='2 8' opacity='0.15'/%3E%3C/svg%3E") center/300px repeat;
+  opacity:.4;
+}
+
+/* Triple moon SVG header ornament */
+.moon-ornament{display:flex;justify-content:center;margin-bottom:1.5rem}
+
+.hero-eyebrow{
+  font-family:'Cinzel',serif;font-size:10px;letter-spacing:5px;
+  color:var(--gold);text-transform:uppercase;margin-bottom:1.25rem;font-weight:400;
+}
+.hero-title{
+  font-family:'Cinzel',serif;font-size:2.1rem;font-weight:700;
+  color:var(--parchment);line-height:1.15;margin-bottom:1rem;
+  text-shadow:0 0 40px rgba(201,164,50,0.3);
+}
+.hero-title em{font-style:italic;font-family:'EB Garamond',serif;color:var(--gold2);font-weight:400;font-size:2.4rem}
+.hero-sub{font-size:1.05rem;color:var(--muted-light);line-height:1.7;max-width:400px;margin:0 auto;font-style:italic}
+.hero-rune{font-size:.8rem;letter-spacing:8px;color:rgba(201,164,50,.4);margin-top:1.5rem;font-family:'Cinzel',serif}
+
+/* ── PROGRESS ──────────────────────── */
+.progress-wrap{
+  position:sticky;top:0;z-index:100;
+  padding:.65rem 2rem;
+  background:rgba(8,1,26,.92);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--border-gold);
+}
+.progress-bar{height:2px;background:rgba(201,164,50,.15);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--blood),var(--gold),var(--gold2));border-radius:2px;transition:width .6s ease;width:0%}
+.progress-label{font-family:'Cinzel',serif;font-size:9px;color:rgba(201,164,50,.5);text-align:right;margin-top:4px;letter-spacing:2px;text-transform:uppercase}
+
+/* ── SCREENS ──────────────────────── */
+.screen{display:none;padding:2.5rem 2rem;position:relative;z-index:1}
+.screen.active{display:block;animation:rise .5s ease}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+.q-step{
+  font-family:'Cinzel',serif;font-size:9px;letter-spacing:3px;
+  text-transform:uppercase;color:var(--gold);margin-bottom:.75rem;
+}
+.q-text{
+  font-family:'Cinzel',serif;font-size:1.45rem;font-weight:600;
+  color:var(--parchment);line-height:1.35;margin-bottom:.5rem;
+}
+.q-sub{font-size:.95rem;color:var(--muted-light);margin-bottom:1.75rem;font-style:italic;line-height:1.6}
+
+/* ── OPTIONS ──────────────────────── */
+.options{display:flex;flex-direction:column;gap:.8rem}
+.opt{
+  display:flex;align-items:center;gap:1.1rem;
+  padding:1rem 1.25rem;
+  border:1px solid var(--border-gold);
+  border-radius:4px;
+  cursor:pointer;
+  background:rgba(30,5,61,.4);
+  transition:all .25s;
+  position:relative;overflow:hidden;
+}
+.opt::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:2px;
+  background:linear-gradient(180deg,var(--blood),var(--gold));
+  transform:scaleY(0);transition:transform .25s;
+}
+.opt:hover{border-color:rgba(201,164,50,.5);background:rgba(30,5,61,.7);transform:translateX(5px)}
+.opt:hover::before{transform:scaleY(1)}
+.opt.selected{border-color:var(--gold);background:rgba(107,15,42,.25)}
+.opt.selected::before{transform:scaleY(1)}
+.opt-sigil{
+  width:40px;height:40px;border-radius:50%;
+  border:1px solid var(--border-gold);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.2rem;flex-shrink:0;
+  background:rgba(8,1,26,.5);
+}
+.opt-content{flex:1}
+.opt-title{font-family:'Cinzel',serif;font-size:.82rem;color:var(--parchment);margin-bottom:2px;letter-spacing:.5px}
+.opt-desc{font-size:.83rem;color:var(--muted-light);font-style:italic;line-height:1.4}
+
+/* ── BUTTON ──────────────────────── */
+.ritual-btn{
+  display:block;width:100%;margin-top:1.75rem;
+  padding:1rem 1.5rem;border:1px solid var(--gold);
+  border-radius:4px;
+  background:linear-gradient(135deg,rgba(107,15,42,.6),rgba(30,5,61,.8));
+  color:var(--gold2);font-family:'Cinzel',serif;font-size:.9rem;
+  font-weight:600;cursor:pointer;letter-spacing:2px;text-transform:uppercase;
+  transition:all .3s;
+}
+.ritual-btn:hover:not(:disabled){
+  background:linear-gradient(135deg,var(--blood),var(--plum));
+  box-shadow:0 0 30px rgba(201,164,50,.2);
+  transform:translateY(-2px);
+}
+.ritual-btn:disabled{opacity:.3;cursor:not-allowed}
+
+/* ── DIVIDERS ──────────────────────── */
+.sacred-divider{
+  display:flex;align-items:center;gap:1rem;
+  margin:2rem 0;color:rgba(201,164,50,.4);
+  font-family:'Cinzel',serif;font-size:.72rem;letter-spacing:3px;text-transform:uppercase;
+}
+.sacred-divider::before,.sacred-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--border-gold),transparent)}
+
+/* ── ARCHETYPE REVEAL ──────────────── */
+.archetype-reveal{
+  background:radial-gradient(ellipse at 50% 0%,rgba(107,15,42,.4) 0%,rgba(13,2,40,.8) 70%);
+  border:1px solid var(--border-gold);
+  border-radius:4px;padding:2.5rem 2rem;text-align:center;margin-bottom:2rem;
+  position:relative;overflow:hidden;
+}
+.archetype-reveal::before{
+  content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='100' cy='100' r='95' fill='none' stroke='%23C9A432' stroke-width='0.3' opacity='0.12'/%3E%3Ccircle cx='100' cy='100' r='70' fill='none' stroke='%23C9A432' stroke-width='0.3' opacity='0.1'/%3E%3Ccircle cx='100' cy='100' r='45' fill='none' stroke='%23C9A432' stroke-width='0.3' opacity='0.08'/%3E%3C/svg%3E") center/300px no-repeat;
+  pointer-events:none;
+}
+.archetype-sigil{font-size:3.5rem;margin-bottom:.75rem;display:block;animation:pulse 3s ease-in-out infinite}
+@keyframes pulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.3) drop-shadow(0 0 12px rgba(201,164,50,.5))}}
+.archetype-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:5px;color:var(--gold);text-transform:uppercase;margin-bottom:.6rem}
+.archetype-name{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;color:var(--parchment);margin-bottom:.75rem;line-height:1.2}
+.archetype-myth{font-size:1rem;color:var(--muted-light);font-style:italic;line-height:1.7;max-width:420px;margin:0 auto}
+
+/* ── COPY SECTIONS ──────────────────── */
+.oracle-text{
+  font-size:1.05rem;color:var(--muted-light);line-height:1.85;
+  margin-bottom:1rem;
+}
+.oracle-lead{
+  font-family:'Cinzel',serif;font-size:1.3rem;font-weight:600;
+  color:var(--parchment);line-height:1.4;margin-bottom:1rem;
+}
+.incantation{
+  font-size:1.1rem;font-style:italic;color:var(--gold2);
+  line-height:1.75;margin:1.25rem 0;
+  padding:1.25rem 1.5rem;
+  border-left:2px solid var(--blood);
+  background:rgba(107,15,42,.15);
+  border-radius:0 4px 4px 0;
+}
+
+/* ── CREDIBILITY ──────────────────── */
+.sacred-numbers{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin:1.5rem 0}
+.sacred-num{
+  border:1px solid var(--border-gold);border-radius:4px;
+  padding:1rem .5rem;text-align:center;
+  background:rgba(13,2,40,.6);
+}
+.num-val{font-family:'Cinzel',serif;font-size:1.5rem;color:var(--gold);display:block;margin-bottom:3px}
+.num-label{font-size:.72rem;color:var(--muted-light);font-style:italic;line-height:1.3;display:block}
+
+/* ── BOOK MOCKUP ──────────────────── */
+.book-wrap{display:flex;justify-content:center;margin:2rem 0}
+.book-3d{position:relative;width:190px;height:250px;filter:drop-shadow(16px 20px 40px rgba(0,0,0,.7)) drop-shadow(0 0 30px rgba(201,164,50,.15));transform:perspective(900px) rotateY(-16deg)}
+.book-spine{position:absolute;left:-20px;top:3px;bottom:3px;width:20px;background:linear-gradient(180deg,#1A0535,#08011A);border-radius:3px 0 0 3px;display:flex;align-items:center;justify-content:center}
+.book-spine-text{font-family:'Cinzel',serif;font-size:7px;color:var(--gold);writing-mode:vertical-rl;transform:rotate(180deg);letter-spacing:2px;white-space:nowrap}
+.book-front{position:absolute;inset:0;border-radius:2px 8px 8px 2px;overflow:hidden}
+
+/* ── RITUAL CARDS ──────────────────── */
+.ritual-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1.5rem}
+.ritual-card{
+  border:1px solid var(--border-gold);border-radius:4px;
+  padding:1.1rem .9rem;text-align:center;
+  background:rgba(13,2,40,.6);
+  transition:all .25s;
+}
+.ritual-card:hover{border-color:rgba(201,164,50,.5);background:rgba(30,5,61,.7);transform:translateY(-3px)}
+.ritual-card.featured{background:rgba(107,15,42,.25);border-color:rgba(160,24,64,.5)}
+.rc-icon{font-size:1.8rem;margin-bottom:.5rem;display:block}
+.rc-title{font-family:'Cinzel',serif;font-size:.76rem;color:var(--parchment);margin-bottom:.3rem;letter-spacing:.5px}
+.rc-desc{font-size:.78rem;color:var(--muted-light);font-style:italic;line-height:1.35}
+
+/* ── OFFER BOX ──────────────────────── */
+.offer-box{
+  border:1px solid var(--border-gold);border-radius:4px;
+  padding:2rem;margin-bottom:1.5rem;
+  background:radial-gradient(ellipse at 50% 0%,rgba(30,5,61,.7) 0%,rgba(8,1,26,.9) 100%);
+}
+.offer-title{font-family:'Cinzel',serif;font-size:1.3rem;color:var(--parchment);margin-bottom:.4rem;letter-spacing:.5px}
+.offer-sub{font-size:.9rem;color:var(--muted-light);margin-bottom:1.5rem;font-style:italic;line-height:1.55}
+
+.includes{list-style:none;display:flex;flex-direction:column;gap:.65rem;margin-bottom:1.5rem}
+.includes li{display:flex;align-items:flex-start;gap:.75rem;font-size:.92rem;color:var(--silver);line-height:1.45}
+.inc-glyph{color:var(--gold);flex-shrink:0;font-size:.7rem;margin-top:5px;font-family:'Cinzel',serif}
+
+.bonus-row{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1.75rem}
+.bonus-tag{
+  display:inline-flex;align-items:center;gap:.4rem;
+  border:1px solid rgba(201,164,50,.25);border-radius:2px;
+  padding:.3rem .8rem;font-size:.74rem;color:var(--gold);
+  font-family:'Cinzel',serif;letter-spacing:1px;
+  background:rgba(201,164,50,.06);
+}
+
+.price-row{display:flex;align-items:baseline;gap:1rem;margin-bottom:1.5rem}
+.price-old{font-size:.95rem;color:rgba(200,192,216,.4);text-decoration:line-through}
+.price-new{font-family:'Cinzel',serif;font-size:2.3rem;color:var(--gold);letter-spacing:1px}
+.price-note{font-size:.78rem;color:var(--muted-light);font-style:italic}
+
+.cta-btn{
+  display:block;width:100%;padding:1.15rem;border:none;border-radius:4px;
+  background:linear-gradient(135deg,var(--blood) 0%,#8B1A3A 50%,#6B0F2A 100%);
+  color:var(--gold2);font-family:'Cinzel',serif;font-size:.9rem;font-weight:700;
+  cursor:pointer;letter-spacing:3px;text-transform:uppercase;
+  transition:all .3s;text-align:center;text-decoration:none;
+  border:1px solid rgba(201,164,50,.3);
+}
+.cta-btn:hover{box-shadow:0 0 40px rgba(107,15,42,.6),0 0 15px rgba(201,164,50,.2);transform:translateY(-2px)}
+.cta-sub{font-size:.72rem;text-align:center;color:rgba(200,192,216,.5);margin-top:.6rem;letter-spacing:1px;font-family:'Cinzel',serif}
+
+.guarantee{
+  display:flex;align-items:flex-start;gap:.9rem;
+  border:1px solid rgba(201,164,50,.15);border-radius:4px;
+  padding:1rem 1.1rem;margin-top:1.25rem;
+  background:rgba(30,5,61,.3);
+}
+.guarantee-icon{font-size:1.5rem;flex-shrink:0}
+.guarantee-text{font-size:.83rem;color:var(--muted-light);line-height:1.55;font-style:italic}
+.guarantee-text strong{color:var(--parchment);font-style:normal;font-family:'Cinzel',serif;font-size:.8rem;letter-spacing:.5px}
+
+/* ── TESTIMONIALS ──────────────────── */
+.testimonials{display:flex;flex-direction:column;gap:.85rem;margin:1.5rem 0}
+.testi{
+  border:1px solid var(--border-light);border-radius:4px;
+  padding:1.25rem;background:rgba(13,2,40,.5);
+}
+.testi-header{display:flex;align-items:center;gap:.85rem;margin-bottom:.75rem}
+.testi-avatar{
+  width:38px;height:38px;border-radius:50%;
+  border:1px solid var(--border-gold);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cinzel',serif;font-size:.78rem;color:var(--gold);
+  background:rgba(107,15,42,.3);flex-shrink:0;letter-spacing:1px;
+}
+.testi-meta{flex:1}
+.testi-name{font-family:'Cinzel',serif;font-size:.78rem;color:var(--parchment);letter-spacing:.5px}
+.testi-stars{color:var(--gold);font-size:.72rem;margin-top:2px;letter-spacing:2px}
+.testi-text{font-size:.9rem;color:var(--muted-light);line-height:1.7;font-style:italic}
+.testi-text::before{content:'\201C';color:var(--blood);font-size:1.4rem;line-height:0;vertical-align:-.4em;margin-right:.2rem}
+.testi-text::after{content:'\201D';color:var(--blood);font-size:1.4rem;line-height:0;vertical-align:-.4em;margin-left:.1rem}
+
+/* ── URGENCY ──────────────────────── */
+.urgency{
+  border:1px solid rgba(160,24,64,.4);border-radius:4px;
+  padding:1.1rem 1.25rem;text-align:center;margin-bottom:1.5rem;
+  background:rgba(107,15,42,.2);
+}
+.urgency p{font-family:'Cinzel',serif;font-size:.82rem;color:var(--muted-light);letter-spacing:1px;line-height:1.7}
+.urgency strong{color:var(--gold2)}
+
+/* ── FAQ ──────────────────────────── */
+.faq{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1.75rem}
+.faq-item{border:1px solid var(--border-light);border-radius:4px;overflow:hidden}
+.faq-q{
+  padding:.9rem 1.1rem;font-family:'Cinzel',serif;font-size:.8rem;
+  color:var(--parchment);cursor:pointer;
+  display:flex;justify-content:space-between;align-items:center;
+  background:rgba(13,2,40,.5);letter-spacing:.5px;
+  transition:background .2s;
+}
+.faq-q:hover{background:rgba(30,5,61,.7)}
+.faq-a{
+  padding:0 1.1rem;max-height:0;overflow:hidden;
+  transition:max-height .35s ease,padding .35s ease;
+  font-size:.9rem;color:var(--muted-light);line-height:1.7;
+  background:rgba(8,1,26,.5);font-style:italic;
+}
+.faq-a.open{max-height:240px;padding:.85rem 1.1rem}
+.faq-arrow{color:var(--gold);font-size:.65rem;transition:transform .3s;font-family:'Cinzel',serif}
+.faq-item.open .faq-arrow{transform:rotate(180deg)}
+
+.closing{text-align:center;padding:1.5rem 0}
+.closing p{font-family:'Cinzel',serif;font-size:.8rem;color:rgba(201,164,50,.4);letter-spacing:2px;line-height:2}
+
+@media(max-width:480px){
+  .hero-title{font-size:1.65rem}
+  .hero-title em{font-size:1.9rem}
+  .q-text{font-size:1.2rem}
+  .screen{padding:2rem 1.25rem}
+  .ritual-grid{grid-template-columns:1fr}
+  .book-3d{width:155px;height:205px}
+  .sacred-numbers{grid-template-columns:repeat(3,1fr)}
+}
+</style>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1185439293635235');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1185439293635235&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
+</head>
+<body>
+
+<!-- STARFIELD -->
+<div class="starfield" id="stars"></div>
+
+<div id="app">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="moon-ornament">
+      <svg width="120" height="40" viewBox="0 0 120 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="20" cy="20" r="10" fill="none" stroke="#C9A432" stroke-width="1" opacity="0.6"/>
+        <path d="M20 10 A10 10 0 0 0 20 30" fill="#C9A432" opacity="0.3"/>
+        <circle cx="60" cy="20" r="13" fill="none" stroke="#C9A432" stroke-width="1.2"/>
+        <circle cx="60" cy="20" r="9" fill="#C9A432" opacity="0.15"/>
+        <circle cx="60" cy="20" r="4" fill="#C9A432" opacity="0.4"/>
+        <line x1="43" y1="20" x2="35" y2="20" stroke="#C9A432" stroke-width=".6" opacity="0.4"/>
+        <line x1="77" y1="20" x2="85" y2="20" stroke="#C9A432" stroke-width=".6" opacity="0.4"/>
+        <circle cx="100" cy="20" r="10" fill="none" stroke="#C9A432" stroke-width="1" opacity="0.6"/>
+        <path d="M100 10 A10 10 0 0 1 100 30" fill="#C9A432" opacity="0.3"/>
+        <line x1="55" y1="8" x2="55" y2="4" stroke="#C9A432" stroke-width=".6" opacity="0.3"/>
+        <line x1="65" y1="8" x2="65" y2="4" stroke="#C9A432" stroke-width=".6" opacity="0.3"/>
+      </svg>
+    </div>
+    <p class="hero-eyebrow">☽ Oráculo do Amor Sagrado ☾</p>
+    <h1 class="hero-title">O universo já sabe<br>o que o seu <em>amor precisa.</em></h1>
+    <p class="hero-sub">Responda 5 perguntas e descubra qual ritual espiritual foi feito exatamente para a sua situação — e como agir hoje mesmo pelo amor que você sente.</p>
+    <p class="hero-rune">☽ ✦ ○ ✦ ☾</p>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="prog"></div></div>
+    <p class="progress-label" id="prog-label">O círculo se abre</p>
+  </div>
+
+  <!-- Q1 -->
+  <div id="q1" class="screen active">
+    <p class="q-step">Primeira revelação · 1 de 5</p>
+    <p class="q-text">Onde está o seu coração agora?</p>
+    <p class="q-sub">Não existe resposta certa ou errada. O oráculo precisa da sua verdade.</p>
+    <div class="options">
+      <div class="opt" onclick="pick(this,'q1','ex')">
+        <div class="opt-sigil">🔥</div>
+        <div class="opt-content">
+          <p class="opt-title">Na chama que ainda arde</p>
+          <p class="opt-desc">Terminei com alguém e esse amor ainda queima dentro de mim</p>
+        </div>
+      </div>
+      <div class="opt" onclick="pick(this,'q1','rel')">
+        <div class="opt-sigil">⚖️</div>
+        <div class="opt-content">
+          <p class="opt-title">No equilíbrio que se perdeu</p>
+          <p class="opt-desc">Estou em um relacionamento, mas algo sagrado se rompeu entre nós</p>
+        </div>
+      </div>
+      <div class="opt" onclick="pick(this,'q1','new')">
+        <div class="opt-sigil">🌱</div>
+        <div class="opt-content">
+          <p class="opt-title">Na semente que espera florescer</p>
+          <p class="opt-desc">Estou pronta para receber um amor que ainda não chegou</p>
+        </div>
+      </div>
+    </div>
+    <button class="ritual-btn" id="btn-q1" disabled onclick="next('q1','q2',20,'Segunda revelação')">Continuar o ritual →</button>
+  </div>
+
+  <!-- Q2 -->
+  <div id="q2" class="screen">
+    <p class="q-step">Segunda revelação · 2 de 5</p>
+    <p class="q-text">Como sua energia se manifesta?</p>
+    <p class="q-sub">O oráculo lê sua vibração atual para guiar o ritual.</p>
+    <div class="options">
+      <div class="opt" onclick="pick(this,'q2','anxious')">
+        <div class="opt-sigil">🌪️</div>
+        <div class="opt-content">
+          <p class="opt-title">Como o vento — inquieta</p>
+          <p class="opt-desc">Minha mente não para. Essa situação ocupa todos os meus pensamentos</p>
+        </div>
+      </div>
+      <div class="opt" onclick="pick(this,'q2','numb')">
+        <div class="opt-sigil">🌊</div>
+        <div class="opt-content">
+          <p class="opt-title">Como as águas profundas — quieta</p>
+          <p class="opt-desc">Sinto, mas não consigo nomear. Há algo dormindo dentro de mim</p>
+        </div>
+      </div>
+      <div class="opt" onclick="pick(this,'q2','hopeful')">
+        <div class="opt-sigil">🕯️</div>
+        <div class="opt-content">
+          <p class="opt-title">Como a chama — acesa</p>
+          <p class="opt-desc">Sinto esperança. Algo me diz que uma virada está próxima</p>
+        </div>
+      </div>
+    </div>
+    <button class="ritual-btn" id="btn-q2" disabled onclick="next('q2','q3',40,'Terceira revelação')">Continuar o ritual →</button>
+  </div>
+
+  <!-- Q3 -->
+  <div id="q3" class="screen">
+    <p class="q-step">Terceira revelação · 3 de 5</p>
+    <p class="q-text">Qual é sua relação com o sagrado?</p>
+    <p class="q-sub">Toda jornada espiritual começa de um lugar diferente.</p>
+    <div class="options">
+      <div class="opt" onclick="pick(this,'q3','prayer')">
+        <div class="opt-sigil">🙏</div>
+        <div class="opt-content">
+          <p class="opt-title">Já caminho com a fé</p>
+          <p class="opt-desc">Rezo, acredito nas forças invisíveis — mas quero aprofundar minha prática</p>
+        </div>
+      </div>
+      <div class="opt" onclick="pick(this,'q3','tried')">
+        <div class="opt-sigil">🕯️</div>
+        <div class="opt-content">
+          <p class="opt-title">Já toquei no fogo sagrado</p>
+          <p class="opt-desc">Já fiz simpatias e rituais, mas algo ficou incompleto</p>
+        </div>
+      </div>
+      <div class="opt" onclick="pick(this,'q3','first')">
+        <div class="opt-sigil">🔮</div>
+        <div class="opt-content">
+          <p class="opt-title">Chego agora ao altar</p>
+          <p class="opt-desc">É minha primeira vez. Venho com o coração aberto e sem julgamentos</p>
+        </div>
+      </div>
+    </div>
+    <button class="ritual-btn" id="btn-q3" disabled onclick="next('q3','q4',60,'Quarta revelação')">Continuar o ritual →</button>
+  </div>
+
+  <!-- Q4 -->
+  <div id="q4" class="screen">
+    <p class="q-step">Quarta revelação · 4 de 5</p>
+    <p class="q-text">O que seu coração pede ao universo?</p>
+    <p class="q-sub">Seja honesta. O universo só age sobre o que você anuncia com clareza.</p>
+    <div class="options">
+      <div class="opt" onclick="pick(this,'q4','reconnect')">
+        <div class="opt-sigil">🔁</div>
+        <div class="opt-content">
+          <p class="opt-title">Reconexão</p>
+          <p class="opt-desc">Que essa pessoa sinta minha falta e venha ao meu encontro</p>
+        </div>
+      </div>
+      <div class="opt" onclick="pick(this,'q4','harmony')">
+        <div class="opt-sigil">🕊️</div>
+        <div class="opt-content">
+          <p class="opt-title">Harmonia</p>
+          <p class="opt-desc">Que a paz, o amor e o entendimento voltem para nós</p>
+        </div>
+      </div>
+      <div class="opt" onclick="pick(this,'q4','attract')">
+        <div class="opt-sigil">🌹</div>
+        <div class="opt-content">
+          <p class="opt-title">Magnetismo</p>
+          <p class="opt-desc">Que o amor certo chegue até mim sem que eu precise correr atrás</p>
+        </div>
+      </div>
+    </div>
+    <button class="ritual-btn" id="btn-q4" disabled onclick="next('q4','q5',80,'Quinta revelação')">Continuar o ritual →</button>
+  </div>
+
+  <!-- Q5 -->
+  <div id="q5" class="screen">
+    <p class="q-step">Quinta revelação · 5 de 5</p>
+    <p class="q-text">Você acredita que forças maiores guiam o amor?</p>
+    <p class="q-sub">Esta é a pergunta mais importante. Responda com sua verdade mais profunda.</p>
+    <div class="options">
+      <div class="opt" onclick="pick(this,'q5','faith')">
+        <div class="opt-sigil">⭐</div>
+        <div class="opt-content">
+          <p class="opt-title">Sim — com toda a minha alma</p>
+          <p class="opt-desc">Tenho fé plena de que o universo age quando invocado com intenção</p>
+        </div>
+      </div>
+      <div class="opt" onclick="pick(this,'q5','doubt')">
+        <div class="opt-sigil">🌙</div>
+        <div class="opt-content">
+          <p class="opt-title">Acredito, mas ainda vacilo</p>
+          <p class="opt-desc">Há algo em mim que acredita, mas outra parte ainda duvida</p>
+        </div>
+      </div>
+      <div class="opt" onclick="pick(this,'q5','open')">
+        <div class="opt-sigil">🚪</div>
+        <div class="opt-content">
+          <p class="opt-title">Estou me abrindo para isso</p>
+          <p class="opt-desc">Não sei ao certo, mas algo me trouxe até aqui — e isso já é suficiente</p>
+        </div>
+      </div>
+    </div>
+    <button class="ritual-btn" id="btn-q5" disabled onclick="showResult()">Revelar meu arquétipo ✦</button>
+  </div>
+
+  <!-- RESULTADO -->
+  <div id="result" class="screen">
+    <div class="archetype-reveal" id="archetype-card"></div>
+    <div id="result-body"></div>
+  </div>
+
+</div>
+
+<script>
+// ── STARFIELD ───────────────────────────────────────────────────────────
+(function(){
+  const wrap = document.getElementById('stars');
+  for(let i=0;i<80;i++){
+    const s=document.createElement('div');
+    s.className='star';
+    const size=Math.random()*2+.5;
+    s.style.cssText=`width:${size}px;height:${size}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${2+Math.random()*4}s;--delay:${Math.random()*4}s;--op:${.4+Math.random()*.6}`;
+    wrap.appendChild(s);
+  }
+})();
+
+// ── QUIZ ────────────────────────────────────────────────────────────────
+const answers={};
+
+function pick(el,q,val){
+  document.querySelectorAll('#'+q+' .opt').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+  answers[q]=val;
+  document.getElementById('btn-'+q).disabled=false;
+}
+
+function next(from,to,pct,label){
+  document.getElementById(from).classList.remove('active');
+  document.getElementById(to).classList.add('active');
+  document.getElementById('prog').style.width=pct+'%';
+  document.getElementById('prog-label').textContent=label;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── ARCHETYPE DATA ───────────────────────────────────────────────────────
+const archetypes={
+  ex:{
+    sigil:'🔥',
+    name:'A Fênix',
+    myth:'Como Perséfone que retornou do submundo ou Ísis que recolheu os fragmentos de Osíris — você é aquela que transforma a dor em poder. O amor que perdeu não morreu. Entrou em eclipse.',
+  },
+  rel:{
+    sigil:'⚖️',
+    name:'A Sacerdotisa',
+    myth:'Como Hera, guardiã dos vínculos sagrados, ou a Sacerdotisa do Tarot que conhece os segredos ocultos — você carrega a sabedoria de proteger o que foi construído. Seu amor é um templo que pode ser purificado.',
+  },
+  new:{
+    sigil:'🌹',
+    name:'Afrodite Desperta',
+    myth:'Como Vênus emergindo das águas ou Inanna descendo e ascendendo transformada — você está em estado de florescimento. Sua energia magnética já existe. Ela só precisa ser ativada.',
+  },
+};
+
+// ── PERSONALIZED COPY ────────────────────────────────────────────────────
+function getOpening(){
+  const q2=answers.q2, q3=answers.q3;
+  const energy={
+    anxious:{lead:'Essa inquietação não é fraqueza — é fogo sagrado.',body:'O mesmo fogo que queima também ilumina. Quando uma alma não consegue parar de pensar em alguém ou em algo, é porque existe um fio invisível que ainda conecta. O universo não cortou esse fio — apenas o enrolou. E ele pode ser desfeito.'},
+    numb:{lead:'As águas profundas guardam os maiores tesouros.',body:'Quando a emoção se recolhe para dentro, não desaparece — ela desce às profundezas à espera de um ritual que a faça emergir. Você não está fria. Está incubando algo poderoso. E o momento de deixá-lo nascer chegou.'},
+    hopeful:{lead:'A esperança é a linguagem que o universo mais ouve.',body:'Você chegou aqui com a chama acesa. Isso não é sorte — é sinal. Quando uma alma está pronta para receber, o universo começa a mover as peças antes mesmo do ritual. Você já está no processo.'},
+  };
+  const exp={
+    prayer:'Sua fé é o alicerce. O que vou te mostrar não contradiz suas orações — as amplifica. É como colocar um espelho diante de uma vela: a mesma luz, multiplicada.',
+    tried:'O fato de você já ter tentado e não ter chegado onde queria não significa que os rituais não funcionam. Significa que faltou método. Como uma planta que precisa de solo certo, água na dose certa e luz no ângulo certo — rituais têm sua ciência sagrada.',
+    first:'Chegar pela primeira vez ao sagrado com o coração aberto é um presente raro. Sem camadas de ceticismo, sem expectativas rígidas — você está no estado ideal para que o universo aja livremente através de você.',
+  };
+  const e=energy[q2]||energy.hopeful;
+  return {lead:e.lead,body:e.body,exp:exp[q3]||exp.first};
+}
+
+function getPromise(){
+  const promises={
+    reconnect:'O ritual certo não força o pensamento de ninguém — ele reabre o canal energético entre duas almas. Quando esse canal se abre, ela começa a sentir sua presença mesmo à distância. Começa a lembrar. Começa a questionar. E age por vontade própria.',
+    harmony:'O amor não some — ele fica preso sob camadas de energia pesada, mágoas não ditas e vibrações externas. Um ritual de purificação não cria nada novo: ele remove o que está bloqueando o que sempre esteve lá.',
+    attract:'Você não precisa perseguir o amor — precisa se tornar irresistível para ele. Quando sua vibração sobe, quando seu campo energético se alinha, o amor certo não passa por você. Para. E fica.',
+  };
+  return promises[answers.q4]||promises.attract;
+}
+
+function getCredNote(){
+  const notes={
+    faith:'Sua fé já está ativa e em movimento. Os rituais vão dar a ela forma, direção e poder de manifestação.',
+    doubt:'A dúvida honesta é mais poderosa que a fé performática. O universo responde à autenticidade — não à perfeição.',
+    open:'Mente aberta é o solo mais fértil para o sagrado. O universo trabalha com mais liberdade quando não há resistência.',
+  };
+  return notes[answers.q5]||notes.open;
+}
+
+function getRituals(){
+  const all={
+    ex:[
+      {icon:'🕯️',title:'Ritual da Vela Vermelha',desc:'Desperta o pensamento dele em você e reabre o canal energético',featured:true},
+      {icon:'🍯',title:'Simpatia do Mel',desc:'Dissolve mágoas e adoça os sentimentos que ficaram amargos'},
+      {icon:'🌿',title:'Banho de Ervas',desc:'Purifica o campo energético e remove bloqueios na reconexão'},
+      {icon:'🌙',title:'+ 6 rituais completos',desc:'Com timing lunar e passo a passo sagrado'},
+    ],
+    rel:[
+      {icon:'🌀',title:'Ritual de Purificação do Casal',desc:'Afasta as energias pesadas que sufocam o amor',featured:true},
+      {icon:'🍎',title:'Simpatia da Maçã',desc:'Sela a harmonia e une as energias com doçura e intenção'},
+      {icon:'🛁',title:'Banho de Reconciliação',desc:'Restaura o equilíbrio — pode ser feito sozinha ou juntos'},
+      {icon:'🌙',title:'+ 6 rituais completos',desc:'Com timing lunar e passo a passo sagrado'},
+    ],
+    new:[
+      {icon:'🌹',title:'Ritual da Rosa Sagrada',desc:'Atrai o amor com as qualidades exatas que você vai escrever',featured:true},
+      {icon:'🌿',title:'Simpatia da Canela',desc:'Ativa o magnetismo feminino e o poder de atração'},
+      {icon:'✨',title:'Banho de Magnetismo',desc:'Eleva sua vibração e torna sua presença irresistível'},
+      {icon:'🌙',title:'+ 6 rituais completos',desc:'Com timing lunar e passo a passo sagrado'},
+    ],
+  };
+  return all[answers.q1]||all.new;
+}
+
+function getHeadline(){
+  const map={
+    ex:{reconnect:'O ritual que reabre o canal entre vocês',harmony:'O ritual que restaura o que foi sagrado',attract:'O ritual que transforma sua dor em magnetismo'},
+    rel:{reconnect:'O ritual que reconecta o que o tempo separou',harmony:'O ritual que purifica o templo do seu amor',attract:'O ritual que reacende a chama entre vocês'},
+    new:{reconnect:'O ritual que desperta o amor que espera por você',harmony:'O ritual que alinha sua energia para o amor certo',attract:'O ritual que ativa Afrodite dentro de você'},
+  };
+  return (map[answers.q1]||map.new)[answers.q4]||'O ritual que transforma sua vida amorosa';
+}
+
+function getTestimonials(){
+  const all={
+    ex:[
+      {init:'C.R',name:'Camila R.',local:'São Paulo',stars:'★ ★ ★ ★ ★',text:'Fiz o ritual da vela vermelha numa sexta à noite. Na segunda-feira ele me mandou mensagem depois de 3 meses de silêncio total. Não consigo explicar o que aconteceu — só sei que aconteceu.'},
+      {init:'A.S',name:'Amanda S.',local:'Curitiba',stars:'★ ★ ★ ★ ★',text:'Estava convicta de que era o fim. Fiz o banho de ervas por 3 sextas seguidas. Na quarta semana ele ligou dizendo que havia cometido um erro. Hoje estamos mais fortes do que antes da separação.'},
+      {init:'B.L',name:'Beatriz L.',local:'Fortaleza',stars:'★ ★ ★ ★ ★',text:'A simpatia do mel pareceu simples demais. Mas em 11 dias ele voltou a me seguir, depois mandou mensagem, depois pediu pra se ver. Exatamente como o guia descreveu que poderia acontecer.'},
+    ],
+    rel:[
+      {init:'F.M',name:'Fernanda M.',local:'Belo Horizonte',stars:'★ ★ ★ ★ ★',text:'Estava no limite com meu marido. O ritual de purificação mudou a energia da nossa casa em dias. Ele ficou mais tranquilo, eu mais leve. Como se um peso invisível tivesse sido retirado de cima de nós.'},
+      {init:'R.C',name:'Renata C.',local:'Porto Alegre',stars:'★ ★ ★ ★ ★',text:'Meu relacionamento estava numa espiral de brigas sem explicação. Fiz o ritual de purificação numa segunda-feira. Em uma semana meu marido comentou que a casa estava com energia diferente — sem eu ter dito nada.'},
+      {init:'T.N',name:'Tatiane N.',local:'Recife',stars:'★ ★ ★ ★ ★',text:'Íamos separar. Fiz os rituais sem contar para ele. Duas semanas depois ele me pediu desculpas por coisas que aconteceram anos atrás e disse que queria tentar de verdade. Nunca imaginei chegar aqui.'},
+    ],
+    new:[
+      {init:'J.P',name:'Juliana P.',local:'Rio de Janeiro',stars:'★ ★ ★ ★ ★',text:'Era cética. Fiz o banho de magnetismo antes de uma festa. Dois homens me abordaram na mesma noite — coisa que nunca tinha acontecido. Comprei o guia há 20 dias e minha vida amorosa está irreconhecível.'},
+      {init:'M.O',name:'Mariana O.',local:'Salvador',stars:'★ ★ ★ ★ ★',text:'Fiquei 2 anos sem um amor real sem entender por quê. Fiz o ritual da rosa e escrevi tudo que queria num parceiro. Em 6 semanas conheci alguém que correspondia exatamente ao que escrevi. Ainda me arrepio.'},
+      {init:'L.C',name:'Letícia C.',local:'Campinas',stars:'★ ★ ★ ★ ★',text:'A simpatia da canela pareceu bobagem no começo. Mas comecei a receber atenção de pessoas que eu nem percebia antes. Em 3 semanas estava namorando alguém extraordinário.'},
+    ],
+  };
+  return all[answers.q1]||all.new;
+}
+
+// ── BOOK SVG ───────────────────────────────────────────────────────────
+function bookSVG(){
+  return `<div class="book-wrap"><div class="book-3d">
+    <div class="book-spine"><span class="book-spine-text">Amarração em Casa · Guia Sagrado</span></div>
+    <div class="book-front">
+      <svg viewBox="0 0 190 250" xmlns="http://www.w3.org/2000/svg" width="190" height="250">
+        <defs>
+          <linearGradient id="bg" x1="0" y1="0" x2=".5" y2="1"><stop offset="0%" stop-color="#1E053D"/><stop offset="50%" stop-color="#0D0228"/><stop offset="100%" stop-color="#08011A"/></linearGradient>
+          <linearGradient id="gd" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#C9A432"/><stop offset="100%" stop-color="#F0D47A"/></linearGradient>
+          <radialGradient id="glow" cx="50%" cy="35%" r="55%"><stop offset="0%" stop-color="#8B1A3A" stop-opacity="0.3"/><stop offset="100%" stop-color="#08011A" stop-opacity="0"/></radialGradient>
+        </defs>
+        <rect width="190" height="250" fill="url(#bg)"/>
+        <rect width="190" height="250" fill="url(#glow)"/>
+        <rect x="5" y="5" width="180" height="240" fill="none" stroke="url(#gd)" stroke-width="0.8" opacity="0.5"/>
+        <rect x="8" y="8" width="174" height="234" fill="none" stroke="url(#gd)" stroke-width="0.3" opacity="0.25"/>
+        <!-- Triple moon -->
+        <circle cx="40" cy="55" r="9" fill="none" stroke="#C9A432" stroke-width=".8" opacity=".5"/>
+        <path d="M40 46 A9 9 0 0 0 40 64" fill="#C9A432" opacity=".25"/>
+        <circle cx="95" cy="52" r="13" fill="none" stroke="#C9A432" stroke-width="1"/>
+        <circle cx="95" cy="52" r="5" fill="#C9A432" opacity=".3"/>
+        <circle cx="150" cy="55" r="9" fill="none" stroke="#C9A432" stroke-width=".8" opacity=".5"/>
+        <path d="M150 46 A9 9 0 0 1 150 64" fill="#C9A432" opacity=".25"/>
+        <!-- Divider -->
+        <line x1="25" y1="75" x2="165" y2="75" stroke="url(#gd)" stroke-width=".7" opacity=".5"/>
+        <!-- Title -->
+        <text x="95" y="100" text-anchor="middle" font-family="Georgia,serif" font-size="13" font-weight="bold" fill="#F5E8D0" letter-spacing="1.5">AMARRAÇÃO</text>
+        <text x="95" y="118" text-anchor="middle" font-family="Georgia,serif" font-size="13" font-weight="bold" fill="#F5E8D0" letter-spacing="1.5">EM CASA</text>
+        <!-- Rose SVG -->
+        <text x="95" y="148" text-anchor="middle" font-size="28">🌹</text>
+        <!-- Subtitle -->
+        <line x1="35" y1="158" x2="155" y2="158" stroke="url(#gd)" stroke-width=".5" opacity=".4"/>
+        <text x="95" y="172" text-anchor="middle" font-family="Georgia,serif" font-size="7.5" fill="#C9A432" font-style="italic">Rituais Sagrados para Reconquistar,</text>
+        <text x="95" y="183" text-anchor="middle" font-family="Georgia,serif" font-size="7.5" fill="#C9A432" font-style="italic">Fortalecer e Atrair o Amor</text>
+        <line x1="35" y1="192" x2="155" y2="192" stroke="url(#gd)" stroke-width=".5" opacity=".4"/>
+        <!-- Pills -->
+        <rect x="18" y="202" width="45" height="13" rx="6" fill="#6B0F2A" opacity=".6"/>
+        <text x="40" y="212" text-anchor="middle" font-size="6.5" fill="#F0D47A">🕯️ Rituais</text>
+        <rect x="72" y="202" width="45" height="13" rx="6" fill="#6B0F2A" opacity=".6"/>
+        <text x="94" y="212" text-anchor="middle" font-size="6.5" fill="#F0D47A">🌿 Banhos</text>
+        <rect x="126" y="202" width="45" height="13" rx="6" fill="#6B0F2A" opacity=".6"/>
+        <text x="148" y="212" text-anchor="middle" font-size="6.5" fill="#F0D47A">✦ Orações</text>
+        <!-- Bottom badge -->
+        <rect x="45" y="225" width="100" height="14" rx="7" fill="url(#gd)" opacity=".9"/>
+        <text x="95" y="235" text-anchor="middle" font-size="7" fill="#08011A" font-weight="bold" letter-spacing="2">GUIA SAGRADO</text>
+      </svg>
+    </div>
+  </div></div>`;
+}
+
+// ── RENDER RESULT ────────────────────────────────────────────────────────
+function showResult(){
+  document.getElementById('q5').classList.remove('active');
+  document.getElementById('prog').style.width='100%';
+  document.getElementById('prog-label').textContent='O círculo se fecha ✦';
+  document.getElementById('result').classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+
+  const arch=archetypes[answers.q1]||archetypes.new;
+  const opening=getOpening();
+  const promise=getPromise();
+  const credNote=getCredNote();
+  const rituals=getRituals();
+  const headline=getHeadline();
+  const testis=getTestimonials();
+
+  document.getElementById('archetype-card').innerHTML=`
+    <span class="archetype-sigil">${arch.sigil}</span>
+    <p class="archetype-label">Seu Perfil Espiritual</p>
+    <p class="archetype-name">${arch.name}</p>
+    <p class="archetype-myth">${arch.myth}</p>
+  `;
+
+  document.getElementById('result-body').innerHTML=`
+  <div style="padding:0 2rem">
+
+    <!-- ABERTURA EMOCIONAL -->
+    <p class="oracle-lead">${opening.lead}</p>
+    <p class="oracle-text">${opening.body}</p>
+    <div class="incantation">${opening.exp}</div>
+    <p class="oracle-text" style="font-style:italic;font-size:1.08rem">"${promise}"</p>
+
+    <!-- CREDIBILIDADE SAGRADA -->
+    <div class="sacred-divider">as marcas do ritual</div>
+    <div class="sacred-numbers">
+      <div class="sacred-num"><span class="num-val">+2.400</span><span class="num-label">mulheres que já fizeram a virada</span></div>
+      <div class="sacred-num"><span class="num-val">9</span><span class="num-label">rituais completos com passo a passo</span></div>
+      <div class="sacred-num"><span class="num-val">7 dias</span><span class="num-label">de garantia sagrada</span></div>
+    </div>
+    <p class="oracle-text" style="font-size:.88rem;font-style:italic">${credNote}</p>
+
+    <div class="sacred-divider">o que o oráculo revela</div>
+    <p class="oracle-lead" style="font-size:1.2rem">${headline}</p>
+    <p class="oracle-text">Um grimório prático com 9 rituais completos — ervas, velas, banhos, intenções e timing lunar — tudo o que você precisa para agir espiritualmente pelo seu amor sem sair de casa.</p>
+
+  </div>
+
+  ${bookSVG()}
+
+  <div style="padding:0 2rem">
+
+    <div class="sacred-divider">rituais do seu arquétipo</div>
+    <div class="ritual-grid">${rituals.map(r=>`
+      <div class="ritual-card${r.featured?' featured':''}">
+        <span class="rc-icon">${r.icon}</span>
+        <p class="rc-title">${r.title}</p>
+        <p class="rc-desc">${r.desc}</p>
+      </div>`).join('')}
+    </div>
+
+    <!-- OFERTA -->
+    <div class="offer-box">
+      <p class="offer-title">Amarração em Casa</p>
+      <p class="offer-sub">Guia Sagrado de Rituais Espirituais · 9 rituais completos + 3 bônus</p>
+      <ul class="includes">
+        <li><span class="inc-glyph">✦</span>9 rituais com passo a passo completo e fundamento espiritual de cada etapa</li>
+        <li><span class="inc-glyph">✦</span>O que potencializa — e o que bloqueia — cada ritual</li>
+        <li><span class="inc-glyph">✦</span>Lista completa de materiais com onde encontrar</li>
+        <li><span class="inc-glyph">✦</span>Como usar intenção, oração e timing lunar para amplificar o resultado</li>
+      </ul>
+      <p style="font-family:'Cinzel',serif;font-size:.75rem;color:var(--gold);letter-spacing:2px;margin-bottom:.6rem">BÔNUS SAGRADOS</p>
+      <div class="bonus-row">
+        <span class="bonus-tag">☽ Calendário Lunar</span>
+        <span class="bonus-tag">✦ Lista de Materiais</span>
+        <span class="bonus-tag">🙏 3 Orações Sagradas</span>
+      </div>
+      <div class="price-row">
+        <span class="price-old">R$ 67</span>
+        <span class="price-new">R$ 27</span>
+        <span class="price-note">acesso imediato</span>
+      </div>
+      <a class="cta-btn" href="https://pay.cakto.com.br/32eamuv_885894" target="_blank">Iniciar meu ritual agora · R$ 27</a>
+      <p class="cta-sub">Pagamento seguro · Acesso imediato · PDF para celular e computador</p>
+      <div class="guarantee">
+        <span class="guarantee-icon">🛡️</span>
+        <div class="guarantee-text"><strong>Garantia Sagrada de 7 Dias</strong><br>Se você realizar os rituais e não sentir nenhuma transformação energética, devolvemos seu investimento integralmente. Sem questionamentos.</div>
+      </div>
+    </div>
+
+    <div class="sacred-divider">vozes do círculo sagrado</div>
+    <div class="testimonials">${testis.map(t=>`
+      <div class="testi">
+        <div class="testi-header">
+          <div class="testi-avatar">${t.init}</div>
+          <div class="testi-meta">
+            <p class="testi-name">${t.name} · ${t.local}</p>
+            <p class="testi-stars">${t.stars}</p>
+          </div>
+        </div>
+        <p class="testi-text">${t.text}</p>
+      </div>`).join('')}
+    </div>
+
+    <div class="sacred-divider">perguntas ao oráculo</div>
+    <div class="faq">
+      ${[
+        ['Preciso ter experiência com espiritualidade?','Não. Os rituais foram criados para quem está começando. Você recebe cada passo com explicação completa do significado espiritual. O único ingrediente insubstituível é a sua intenção.'],
+        ['Os materiais são difíceis de encontrar?','Não. Supermercado, farmácia, ervanária ou loja espiritual. O guia inclui lista completa com onde encontrar cada item. Nenhum ritual exige ingredientes raros ou caros.'],
+        ['Em quanto tempo sinto resultados?','Cada situação carrega sua própria magia. Muitas mulheres relatam mudanças de energia em dias — a pessoa aparece nos sonhos, manda uma mensagem inesperada, a atmosfera muda. O guia inclui o calendário lunar para você agir nos momentos de maior potência.'],
+        ['É seguro? Pode ter consequências negativas?','Todos os rituais trabalham com energias de amor e bem. O guia ensina a invocar sempre pelo bem maior de todos — o que além de ético, potencializa o resultado e protege você de qualquer ressonância negativa.'],
+        ['Já tentei simpatias antes e não funcionou. Por que seria diferente?','A maioria do que circula na internet é incompleto — falta o timing, a intenção correta, ou um passo que muda tudo. Este guia tem método: cada ritual combina fase lunar, ingredientes certos e intenção específica para o seu tipo de situação.'],
+      ].map((f,i)=>`
+        <div class="faq-item" id="faq${i}">
+          <div class="faq-q" onclick="toggleFaq('faq${i}')">${f[0]}<span class="faq-arrow">▼</span></div>
+          <div class="faq-a" id="faq${i}-a">${f[1]}</div>
+        </div>`).join('')}
+    </div>
+
+    <div class="urgency">
+      <p>☽ &nbsp;Oferta do círculo: <strong>R$ 27</strong> por tempo limitado&nbsp; ☾<br>
+      Após encerrar, o valor retorna a <strong>R$ 67</strong></p>
+    </div>
+
+    <a class="cta-btn" href="https://pay.cakto.com.br/32eamuv_885894" target="_blank">Sim — quero transformar meu destino amoroso ✦</a>
+    <p class="cta-sub" style="margin-bottom:2rem">Pagamento seguro · Cartão, Pix ou boleto</p>
+
+    <div class="closing">
+      <p>☽ &nbsp; Com luz, amor e intenção &nbsp; ☾<br>
+      <span style="font-size:.7rem;letter-spacing:1px">Acesso imediato · Funciona em celular, tablet e computador</span></p>
+    </div>
+  </div>`;
+}
+
+function toggleFaq(id){
+  const item=document.getElementById(id);
+  const ans=document.getElementById(id+'-a');
+  const open=item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(f=>{f.classList.remove('open');f.querySelector('.faq-a').classList.remove('open')});
+  if(!open){item.classList.add('open');ans.classList.add('open')}
+}
+</script>
+</body>
+</html>
