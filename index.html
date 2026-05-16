@@ -88,14 +88,32 @@ body{
 @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 
 .q-step{
-  font-family:'Cinzel',serif;font-size:9px;letter-spacing:3px;
+  font-family:'Cinzel',serif;font-size:11px;letter-spacing:3px;
   text-transform:uppercase;color:var(--gold);margin-bottom:.75rem;
 }
 .q-text{
-  font-family:'Cinzel',serif;font-size:1.45rem;font-weight:600;
+  font-family:'Cinzel',serif;font-size:1.65rem;font-weight:600;
   color:var(--parchment);line-height:1.35;margin-bottom:.5rem;
 }
-.q-sub{font-size:.95rem;color:var(--muted-light);margin-bottom:1.75rem;font-style:italic;line-height:1.6}
+.q-sub{font-size:1.05rem;color:var(--muted-light);margin-bottom:1rem;font-style:italic;line-height:1.6}
+.q-hint{
+  display:flex;align-items:center;gap:.75rem;
+  margin-bottom:1.5rem;
+  padding:.55rem 1rem;
+  background:rgba(201,164,50,.06);
+  border:1px solid rgba(201,164,50,.2);
+  border-radius:30px;
+}
+.q-hint span{
+  font-family:'Cinzel',serif;font-size:.68rem;
+  color:rgba(201,164,50,.75);letter-spacing:3px;
+  text-transform:uppercase;white-space:nowrap;
+  flex-shrink:0;
+}
+.q-hint::before,.q-hint::after{
+  content:'';flex:1;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(201,164,50,.35),transparent);
+}
 
 /* ── OPTIONS ──────────────────────── */
 .options{display:flex;flex-direction:column;gap:.8rem}
@@ -126,11 +144,11 @@ body{
   background:rgba(8,1,26,.5);
 }
 .opt-content{flex:1}
-.opt-title{font-family:'Cinzel',serif;font-size:.82rem;color:var(--parchment);margin-bottom:2px;letter-spacing:.5px}
-.opt-desc{font-size:.83rem;color:var(--muted-light);font-style:italic;line-height:1.4}
+.opt-title{font-family:'Cinzel',serif;font-size:.95rem;color:var(--parchment);margin-bottom:2px;letter-spacing:.5px}
+.opt-desc{font-size:.92rem;color:var(--muted-light);font-style:italic;line-height:1.4}
 
 /* ── BUTTON ──────────────────────── */
-.ritual-btn{
+.ritual-btn{display:none !important;
   display:block;width:100%;margin-top:1.75rem;
   padding:1rem 1.5rem;border:1px solid var(--gold);
   border-radius:4px;
@@ -174,15 +192,15 @@ body{
 
 /* ── COPY SECTIONS ──────────────────── */
 .oracle-text{
-  font-size:1.05rem;color:var(--muted-light);line-height:1.85;
+  font-size:1.12rem;color:var(--muted-light);line-height:1.85;
   margin-bottom:1rem;
 }
 .oracle-lead{
-  font-family:'Cinzel',serif;font-size:1.3rem;font-weight:600;
+  font-family:'Cinzel',serif;font-size:1.45rem;font-weight:600;
   color:var(--parchment);line-height:1.4;margin-bottom:1rem;
 }
 .incantation{
-  font-size:1.1rem;font-style:italic;color:var(--gold2);
+  font-size:1.18rem;font-style:italic;color:var(--gold2);
   line-height:1.75;margin:1.25rem 0;
   padding:1.25rem 1.5rem;
   border-left:2px solid var(--blood);
@@ -218,8 +236,8 @@ body{
 .ritual-card:hover{border-color:rgba(201,164,50,.5);background:rgba(30,5,61,.7);transform:translateY(-3px)}
 .ritual-card.featured{background:rgba(107,15,42,.25);border-color:rgba(160,24,64,.5)}
 .rc-icon{font-size:1.8rem;margin-bottom:.5rem;display:block}
-.rc-title{font-family:'Cinzel',serif;font-size:.76rem;color:var(--parchment);margin-bottom:.3rem;letter-spacing:.5px}
-.rc-desc{font-size:.78rem;color:var(--muted-light);font-style:italic;line-height:1.35}
+.rc-title{font-family:'Cinzel',serif;font-size:.88rem;color:var(--parchment);margin-bottom:.3rem;letter-spacing:.5px}
+.rc-desc{font-size:.88rem;color:var(--muted-light);font-style:italic;line-height:1.35}
 
 /* ── OFFER BOX ──────────────────────── */
 .offer-box{
@@ -228,10 +246,10 @@ body{
   background:radial-gradient(ellipse at 50% 0%,rgba(30,5,61,.7) 0%,rgba(8,1,26,.9) 100%);
 }
 .offer-title{font-family:'Cinzel',serif;font-size:1.3rem;color:var(--parchment);margin-bottom:.4rem;letter-spacing:.5px}
-.offer-sub{font-size:.9rem;color:var(--muted-light);margin-bottom:1.5rem;font-style:italic;line-height:1.55}
+.offer-sub{font-size:.97rem;color:var(--muted-light);margin-bottom:1.5rem;font-style:italic;line-height:1.55}
 
 .includes{list-style:none;display:flex;flex-direction:column;gap:.65rem;margin-bottom:1.5rem}
-.includes li{display:flex;align-items:flex-start;gap:.75rem;font-size:.92rem;color:var(--silver);line-height:1.45}
+.includes li{display:flex;align-items:flex-start;gap:.75rem;font-size:1rem;color:var(--silver);line-height:1.45}
 .inc-glyph{color:var(--gold);flex-shrink:0;font-size:.7rem;margin-top:5px;font-family:'Cinzel',serif}
 
 .bonus-row{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1.75rem}
@@ -303,7 +321,7 @@ body{
 .faq{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1.75rem}
 .faq-item{border:1px solid var(--border-light);border-radius:4px;overflow:hidden}
 .faq-q{
-  padding:.9rem 1.1rem;font-family:'Cinzel',serif;font-size:.8rem;
+  padding:.9rem 1.1rem;font-family:'Cinzel',serif;font-size:.9rem;
   color:var(--parchment);cursor:pointer;
   display:flex;justify-content:space-between;align-items:center;
   background:rgba(13,2,40,.5);letter-spacing:.5px;
@@ -313,7 +331,7 @@ body{
 .faq-a{
   padding:0 1.1rem;max-height:0;overflow:hidden;
   transition:max-height .35s ease,padding .35s ease;
-  font-size:.9rem;color:var(--muted-light);line-height:1.7;
+  font-size:.97rem;color:var(--muted-light);line-height:1.7;
   background:rgba(8,1,26,.5);font-style:italic;
 }
 .faq-a.open{max-height:240px;padding:.85rem 1.1rem}
@@ -392,7 +410,7 @@ src="https://www.facebook.com/tr?id=1185439293635235&ev=PageView&noscript=1"
     <p class="q-step">Primeira revelação · 1 de 5</p>
     <p class="q-text">Onde está o seu coração agora?</p>
     <p class="q-sub">Não existe resposta certa ou errada. O oráculo precisa da sua verdade.</p>
-    <div class="options">
+    <div class="q-hint"><span>Selecione uma das opcoes abaixo</span></div><div class="options">
       <div class="opt" onclick="pick(this,'q1','ex')">
         <div class="opt-sigil">🔥</div>
         <div class="opt-content">
@@ -423,7 +441,7 @@ src="https://www.facebook.com/tr?id=1185439293635235&ev=PageView&noscript=1"
     <p class="q-step">Segunda revelação · 2 de 5</p>
     <p class="q-text">Como sua energia se manifesta?</p>
     <p class="q-sub">O oráculo lê sua vibração atual para guiar o ritual.</p>
-    <div class="options">
+    <div class="q-hint"><span>Selecione uma das opcoes abaixo</span></div><div class="options">
       <div class="opt" onclick="pick(this,'q2','anxious')">
         <div class="opt-sigil">🌪️</div>
         <div class="opt-content">
@@ -454,7 +472,7 @@ src="https://www.facebook.com/tr?id=1185439293635235&ev=PageView&noscript=1"
     <p class="q-step">Terceira revelação · 3 de 5</p>
     <p class="q-text">Qual é sua relação com o sagrado?</p>
     <p class="q-sub">Toda jornada espiritual começa de um lugar diferente.</p>
-    <div class="options">
+    <div class="q-hint"><span>Selecione uma das opcoes abaixo</span></div><div class="options">
       <div class="opt" onclick="pick(this,'q3','prayer')">
         <div class="opt-sigil">🙏</div>
         <div class="opt-content">
@@ -485,7 +503,7 @@ src="https://www.facebook.com/tr?id=1185439293635235&ev=PageView&noscript=1"
     <p class="q-step">Quarta revelação · 4 de 5</p>
     <p class="q-text">O que seu coração pede ao universo?</p>
     <p class="q-sub">Seja honesta. O universo só age sobre o que você anuncia com clareza.</p>
-    <div class="options">
+    <div class="q-hint"><span>Selecione uma das opcoes abaixo</span></div><div class="options">
       <div class="opt" onclick="pick(this,'q4','reconnect')">
         <div class="opt-sigil">🔁</div>
         <div class="opt-content">
@@ -516,7 +534,7 @@ src="https://www.facebook.com/tr?id=1185439293635235&ev=PageView&noscript=1"
     <p class="q-step">Quinta revelação · 5 de 5</p>
     <p class="q-text">Você acredita que forças maiores guiam o amor?</p>
     <p class="q-sub">Esta é a pergunta mais importante. Responda com sua verdade mais profunda.</p>
-    <div class="options">
+    <div class="q-hint"><span>Selecione uma das opcoes abaixo</span></div><div class="options">
       <div class="opt" onclick="pick(this,'q5','faith')">
         <div class="opt-sigil">⭐</div>
         <div class="opt-content">
@@ -566,11 +584,21 @@ src="https://www.facebook.com/tr?id=1185439293635235&ev=PageView&noscript=1"
 // ── QUIZ ────────────────────────────────────────────────────────────────
 const answers={};
 
+const autoNext = {
+  'q1': ()=>next('q1','q2',20,'Segunda revelacao'),
+  'q2': ()=>next('q2','q3',40,'Terceira revelacao'),
+  'q3': ()=>next('q3','q4',60,'Quarta revelacao'),
+  'q4': ()=>next('q4','q5',80,'Quinta revelacao'),
+  'q5': ()=>showResult(),
+};
+
 function pick(el,q,val){
   document.querySelectorAll('#'+q+' .opt').forEach(o=>o.classList.remove('selected'));
   el.classList.add('selected');
   answers[q]=val;
   document.getElementById('btn-'+q).disabled=false;
+  document.querySelectorAll('#'+q+' .opt').forEach(o=>o.style.pointerEvents='none');
+  setTimeout(()=>{ autoNext[q] && autoNext[q](); }, 480);
 }
 
 function next(from,to,pct,label){
