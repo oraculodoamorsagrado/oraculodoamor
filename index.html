@@ -341,6 +341,9 @@ body{
 .closing{text-align:center;padding:1.5rem 0}
 .closing p{font-family:'Cinzel',serif;font-size:.8rem;color:rgba(201,164,50,.4);letter-spacing:2px;line-height:2}
 
+@keyframes spin{from{stroke-dashoffset:0}to{stroke-dashoffset:-100}}
+@keyframes moonpulse{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.08)}}
+#moon-anim svg{animation:moonpulse 1.8s ease-in-out infinite}
 @media(max-width:480px){
   .hero-title{font-size:1.65rem}
   .hero-title em{font-size:1.9rem}
@@ -350,6 +353,41 @@ body{
   .book-3d{width:155px;height:205px}
   .sacred-numbers{grid-template-columns:repeat(3,1fr)}
 }
+
+/* inputs removed */
+
+/* ── VALIDATION TOAST ── */
+.val-toast{
+  position:fixed;
+  bottom:2.5rem;
+  left:50%;
+  transform:translateX(-50%) translateY(20px);
+  background:linear-gradient(135deg,rgba(30,5,61,.97),rgba(92,10,34,.97));
+  border:1px solid rgba(201,164,50,.4);
+  border-radius:30px;
+  padding:.6rem 1.4rem;
+  font-family:'EB Garamond',serif;
+  font-size:1rem;
+  font-style:italic;
+  color:var(--gold2);
+  letter-spacing:.3px;
+  white-space:nowrap;
+  z-index:9999;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .25s ease, transform .25s ease;
+  box-shadow:0 4px 24px rgba(0,0,0,.5);
+}
+.val-toast.show{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
+
+/* Timer highlight animation */
+#timer-min,#timer-sec{transition:color .3s}
+
+/* Loading message fade */
+#loading-msg{transition:opacity .4s;min-height:1.5em}
 </style>
 <!-- Meta Pixel Code -->
 <script>
@@ -375,6 +413,7 @@ src="https://www.facebook.com/tr?id=1185439293635235&ev=PageView&noscript=1"
 <div class="starfield" id="stars"></div>
 
 <div id="app">
+<div class="val-toast" id="val-toast"></div>
 
   <!-- HERO -->
   <div class="hero">
@@ -396,6 +435,14 @@ src="https://www.facebook.com/tr?id=1185439293635235&ev=PageView&noscript=1"
     <p class="hero-eyebrow">☽ Oráculo do Amor Sagrado ☾</p>
     <h1 class="hero-title">O universo já sabe<br>o que o seu <em>amor precisa.</em></h1>
     <p class="hero-sub">Responda 5 perguntas e descubra qual ritual espiritual foi feito exatamente para a sua situação — e como agir hoje mesmo pelo amor que você sente.</p>
+    <div style="display:inline-flex;align-items:center;gap:.5rem;margin-top:1.2rem;padding:.45rem 1.1rem;background:rgba(201,164,50,.08);border:1px solid rgba(201,164,50,.2);border-radius:20px">
+      <div style="display:flex">
+        <div style="width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#5B1F8A,#A01840);border:1.5px solid rgba(201,164,50,.4);margin-left:-6px;first-child{margin-left:0}"></div>
+        <div style="width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#3D1066,#6B0F2A);border:1.5px solid rgba(201,164,50,.4);margin-left:-6px"></div>
+        <div style="width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#2D0A4E,#8B1A3A);border:1.5px solid rgba(201,164,50,.4);margin-left:-6px"></div>
+      </div>
+      <p style="font-family:'EB Garamond',serif;font-size:.92rem;color:rgba(200,192,216,.8);font-style:italic">+2.400 mulheres já descobriram seu ritual</p>
+    </div>
     <p class="hero-rune">☽ ✦ ○ ✦ ☾</p>
   </div>
 
@@ -557,7 +604,24 @@ src="https://www.facebook.com/tr?id=1185439293635235&ev=PageView&noscript=1"
         </div>
       </div>
     </div>
-    <button class="ritual-btn" id="btn-q5" disabled onclick="showResult()">Revelar meu arquétipo ✦</button>
+    <button class="ritual-btn" id="btn-q5" disabled onclick="showResult()">O oráculo está pronto ✦</button>
+  </div>
+
+  <!-- LOADING SCREEN -->
+  <div id="loading" class="screen">
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;padding:2rem;text-align:center">
+      <div class="moon-anim" id="moon-anim">
+        <svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="40" cy="40" r="36" fill="none" stroke="#C9A432" stroke-width="1" opacity="0.3"/>
+          <circle cx="40" cy="40" r="28" fill="none" stroke="#C9A432" stroke-width="0.5" opacity="0.2"/>
+          <circle cx="40" cy="40" r="20" fill="none" stroke="#C9A432" stroke-width="1.5" id="moon-circle"/>
+          <circle cx="40" cy="40" r="6" fill="#C9A432" opacity="0.8"/>
+          <circle cx="40" cy="40" r="3" fill="#F5DC80"/>
+        </svg>
+      </div>
+      <p style="font-family:'Cinzel',serif;font-size:.8rem;color:var(--gold);letter-spacing:4px;text-transform:uppercase;margin-top:2rem;margin-bottom:.75rem">O oráculo está lendo sua energia</p>
+      <p class="loading-dots" style="font-family:'EB Garamond',serif;font-size:1.1rem;font-style:italic;color:var(--muted-light)" id="loading-msg">Analisando sua vibração amorosa...</p>
+    </div>
   </div>
 
   <!-- RESULTADO -->
@@ -585,12 +649,49 @@ src="https://www.facebook.com/tr?id=1185439293635235&ev=PageView&noscript=1"
 const answers={};
 
 const autoNext = {
-  'q1': ()=>next('q1','q2',20,'Segunda revelacao'),
-  'q2': ()=>next('q2','q3',40,'Terceira revelacao'),
-  'q3': ()=>next('q3','q4',60,'Quarta revelacao'),
-  'q4': ()=>next('q4','q5',80,'Quinta revelacao'),
-  'q5': ()=>showResult(),
+  'q1': ()=>next('q1','q2',20,'Segunda revelação'),
+  'q2': ()=>next('q2','q3',40,'Terceira revelação'),
+  'q3': ()=>next('q3','q4',60,'Quarta revelação'),
+  'q4': ()=>next('q4','q5',80,'Quinta revelação'),
+  'q5': ()=>startLoading(),
 };
+
+// Mensagens de validação por pergunta e resposta
+const validationMsgs = {
+  q1: {
+    ex:  'O oráculo reconhece essa chama...',
+    rel: 'O oráculo sente o peso desse vínculo...',
+    new: 'O oráculo percebe sua abertura para o amor...',
+  },
+  q2: {
+    anxious: 'Essa inquietação é energia viva. O oráculo a escuta...',
+    numb:    'As águas profundas guardam os maiores segredos...',
+    hopeful: 'Essa esperança é o que o universo mais reconhece...',
+  },
+  q3: {
+    prayer: 'Sua fé é o alicerce de tudo que virá...',
+    tried:  'O oráculo vê sua jornada. O caminho certo está próximo...',
+    first:  'Mente aberta é o estado ideal para o sagrado agir...',
+  },
+  q4: {
+    reconnect: 'O oráculo sente esse desejo de reconexão...',
+    harmony:   'A harmonia que você busca ainda existe entre vocês...',
+    attract:   'Sua energia de atração está prestes a ser ativada...',
+  },
+  q5: {
+    faith:  'Sua fé plena é o ingrediente mais poderoso de todos...',
+    doubt:  'A dúvida honesta é mais poderosa que a fé performática...',
+    open:   'Algo te trouxe até aqui. O oráculo reconhece esse sinal...',
+  },
+};
+
+function showToast(msg){
+  const toast = document.getElementById('val-toast');
+  if(!toast) return;
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'), 2200);
+}
 
 function pick(el,q,val){
   document.querySelectorAll('#'+q+' .opt').forEach(o=>o.classList.remove('selected'));
@@ -598,7 +699,12 @@ function pick(el,q,val){
   answers[q]=val;
   document.getElementById('btn-'+q).disabled=false;
   document.querySelectorAll('#'+q+' .opt').forEach(o=>o.style.pointerEvents='none');
-  setTimeout(()=>{ autoNext[q] && autoNext[q](); }, 480);
+
+  // Mostra toast de validação
+  const msg = validationMsgs[q] && validationMsgs[q][val];
+  if(msg) showToast(msg);
+
+  setTimeout(()=>{ autoNext[q] && autoNext[q](); }, 1400);
 }
 
 function next(from,to,pct,label){
@@ -607,6 +713,62 @@ function next(from,to,pct,label){
   document.getElementById('prog').style.width=pct+'%';
   document.getElementById('prog-label').textContent=label;
   window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// LOADING SCREEN
+function startLoading(){
+  document.getElementById('q5').classList.remove('active');
+  document.getElementById('prog').style.width='95%';
+  document.getElementById('prog-label').textContent='O oráculo está lendo sua energia...';
+  document.getElementById('loading').classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+
+  const msgs = [
+    'Analisando sua vibração amorosa...',
+    'Identificando os bloqueios energéticos...',
+    'Alinhando com as forças do universo...',
+    'Seu ritual está sendo revelado...',
+  ];
+  let i = 0;
+  const el = document.getElementById('loading-msg');
+  const interval = setInterval(()=>{
+    i++;
+    if(el && msgs[i]) el.textContent = msgs[i];
+  }, 900);
+
+  // Animar lua
+  const moonCircle = document.getElementById('moon-circle');
+  if(moonCircle){
+    moonCircle.style.animation = 'spin 1.5s linear infinite';
+  }
+
+  setTimeout(()=>{
+    clearInterval(interval);
+    document.getElementById('loading').classList.remove('active');
+    document.getElementById('prog').style.width='100%';
+    document.getElementById('prog-label').textContent='O círculo se fecha ✦';
+    document.getElementById('result').classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+    buildResult();
+    startTimer();
+  }, 3500);
+}
+
+// TIMER
+function startTimer(){
+  let total = 15 * 60;
+  const mEl = document.getElementById('timer-min');
+  const sEl = document.getElementById('timer-sec');
+  const tick = ()=>{
+    if(!mEl||!sEl) return;
+    const m = Math.floor(total/60);
+    const s = total % 60;
+    mEl.textContent = String(m).padStart(2,'0');
+    sEl.textContent = String(s).padStart(2,'0');
+    if(total > 0) { total--; setTimeout(tick, 1000); }
+    else { total = 15*60; tick(); } // reinicia
+  };
+  tick();
 }
 
 // ── ARCHETYPE DATA ───────────────────────────────────────────────────────
@@ -767,7 +929,7 @@ function bookSVG(){
 }
 
 // ── RENDER RESULT ────────────────────────────────────────────────────────
-function showResult(){
+function buildResult(){
   document.getElementById('q5').classList.remove('active');
   document.getElementById('prog').style.width='100%';
   document.getElementById('prog-label').textContent='O círculo se fecha ✦';
@@ -781,6 +943,20 @@ function showResult(){
   const rituals=getRituals();
   const headline=getHeadline();
   const testis=getTestimonials();
+
+  // CTA dinâmico por perfil
+  const ctaLabels={
+    ex:{reconnect:'Quero meu ritual de reconexão · R$ 27',harmony:'Quero restaurar nosso amor · R$ 27',attract:'Quero transformar minha energia · R$ 27'},
+    rel:{reconnect:'Quero reconectar nosso amor · R$ 27',harmony:'Quero restaurar nossa harmonia · R$ 27',attract:'Quero elevar nossa vibração · R$ 27'},
+    new:{reconnect:'Quero despertar meu magnetismo · R$ 27',harmony:'Quero atrair um amor verdadeiro · R$ 27',attract:'Quero ativar minha energia de atração · R$ 27'},
+  };
+  const ctaLabel=(ctaLabels[answers.q1]||ctaLabels.new)[answers.q4]||'Iniciar meu ritual agora · R$ 27';
+  setTimeout(()=>{
+    const c1=document.getElementById('cta-main');
+    const c2=document.getElementById('cta-second');
+    if(c1) c1.textContent=ctaLabel;
+    if(c2) c2.textContent='Sim — '+ctaLabel;
+  },100);
 
   document.getElementById('archetype-card').innerHTML=`
     <span class="archetype-sigil">${arch.sigil}</span>
@@ -807,8 +983,7 @@ function showResult(){
     </div>
     <p class="oracle-text" style="font-size:.88rem;font-style:italic">${credNote}</p>
 
-    <div class="sacred-divider">o que o oráculo revela</div>
-    <p class="oracle-lead" style="font-size:1.2rem">${headline}</p>
+    <p class="oracle-lead" style="font-size:1.2rem;margin-top:1rem">${headline}</p>
     <p class="oracle-text">Um grimório prático com 9 rituais completos — ervas, velas, banhos, intenções e timing lunar — tudo o que você precisa para agir espiritualmente pelo seu amor sem sair de casa.</p>
 
   </div>
@@ -817,7 +992,7 @@ function showResult(){
 
   <div style="padding:0 2rem">
 
-    <div class="sacred-divider">rituais do seu arquétipo</div>
+    <div class="sacred-divider">rituais do seu perfil</div>
     <div class="ritual-grid">${rituals.map(r=>`
       <div class="ritual-card${r.featured?' featured':''}">
         <span class="rc-icon">${r.icon}</span>
@@ -842,13 +1017,45 @@ function showResult(){
         <span class="bonus-tag">✦ Lista de Materiais</span>
         <span class="bonus-tag">🙏 3 Orações Sagradas</span>
       </div>
+      <p style="font-family:'Cinzel',serif;font-size:.72rem;color:var(--muted);letter-spacing:1px;margin-bottom:.5rem;text-align:center">Uma consulta espiritual presencial custa em média <s>R$ 150 a R$ 300</s></p>
       <div class="price-row">
         <span class="price-old">R$ 67</span>
         <span class="price-new">R$ 27</span>
         <span class="price-note">acesso imediato</span>
       </div>
-      <a class="cta-btn" href="https://pay.cakto.com.br/32eamuv_885894" target="_blank">Iniciar meu ritual agora · R$ 27</a>
-      <p class="cta-sub">Pagamento seguro · Acesso imediato · PDF para celular e computador</p>
+      <!-- PROVA SOCIAL -->
+      <div style="display:flex;flex-direction:column;gap:.65rem;margin-bottom:1.25rem">
+        <div style="display:flex;align-items:flex-start;gap:.75rem;padding:.85rem 1rem;background:rgba(201,164,50,.05);border:1px solid rgba(201,164,50,.15);border-radius:4px">
+          <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#5B1F8A,#A01840);border:1px solid rgba(201,164,50,.3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:.65rem;color:var(--gold)">C.R</div>
+          <div>
+            <p style="font-family:'Cinzel',serif;font-size:.7rem;color:var(--gold);letter-spacing:.5px;margin-bottom:.3rem">Camila R. · São Paulo &nbsp;<span style="color:var(--gold2)">★★★★★</span></p>
+            <p style="font-size:.88rem;color:var(--muted-light);font-style:italic;line-height:1.55">"Fiz o ritual da vela vermelha na sexta. Na segunda ele me mandou mensagem depois de 3 meses de silêncio. Não consigo explicar — só sei que funcionou."</p>
+          </div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:.75rem;padding:.85rem 1rem;background:rgba(201,164,50,.05);border:1px solid rgba(201,164,50,.15);border-radius:4px">
+          <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#3D1066,#6B0F2A);border:1px solid rgba(201,164,50,.3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:.65rem;color:var(--gold)">F.M</div>
+          <div>
+            <p style="font-family:'Cinzel',serif;font-size:.7rem;color:var(--gold);letter-spacing:.5px;margin-bottom:.3rem">Fernanda M. · Belo Horizonte &nbsp;<span style="color:var(--gold2)">★★★★★</span></p>
+            <p style="font-size:.88rem;color:var(--muted-light);font-style:italic;line-height:1.55">"O banho de reconciliação mudou a energia da nossa casa em dias. Como se um peso invisível tivesse saído de cima de nós."</p>
+          </div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:.75rem;padding:.85rem 1rem;background:rgba(201,164,50,.05);border:1px solid rgba(201,164,50,.15);border-radius:4px">
+          <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#2D0A4E,#8B1A3A);border:1px solid rgba(201,164,50,.3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:.65rem;color:var(--gold)">J.P</div>
+          <div>
+            <p style="font-family:'Cinzel',serif;font-size:.7rem;color:var(--gold);letter-spacing:.5px;margin-bottom:.3rem">Juliana P. · Rio de Janeiro &nbsp;<span style="color:var(--gold2)">★★★★★</span></p>
+            <p style="font-size:.88rem;color:var(--muted-light);font-style:italic;line-height:1.55">"Era cética. Fiz o banho de magnetismo antes de uma festa e dois homens me abordaram na mesma noite. Minha vida amorosa está irreconhecível."</p>
+          </div>
+        </div>
+      </div>
+
+      <a class="cta-btn" id="cta-main" href="https://pay.cakto.com.br/32eamuv_885894" target="_blank">Iniciar meu ritual agora · R$ 27</a>
+      
+      <div style="display:flex;justify-content:center;align-items:center;gap:1rem;margin-top:.6rem;opacity:.5">
+        <span style="font-family:'Cinzel',serif;font-size:.65rem;color:var(--gold);letter-spacing:1px;border:1px solid rgba(201,164,50,.3);padding:.2rem .5rem;border-radius:3px">VISA</span>
+        <span style="font-family:'Cinzel',serif;font-size:.65rem;color:var(--gold);letter-spacing:1px;border:1px solid rgba(201,164,50,.3);padding:.2rem .5rem;border-radius:3px">MASTER</span>
+        <span style="font-family:'Cinzel',serif;font-size:.65rem;color:var(--gold);letter-spacing:1px;border:1px solid rgba(201,164,50,.3);padding:.2rem .5rem;border-radius:3px">PIX</span>
+        <span style="font-family:'Cinzel',serif;font-size:.65rem;color:var(--gold);letter-spacing:1px;border:1px solid rgba(201,164,50,.3);padding:.2rem .5rem;border-radius:3px">BOLETO</span>
+      </div>
       <div class="guarantee">
         <span class="guarantee-icon">🛡️</span>
         <div class="guarantee-text"><strong>Garantia Sagrada de 7 Dias</strong><br>Se você realizar os rituais e não sentir nenhuma transformação energética, devolvemos seu investimento integralmente. Sem questionamentos.</div>
@@ -869,7 +1076,7 @@ function showResult(){
       </div>`).join('')}
     </div>
 
-    <div class="sacred-divider">perguntas ao oráculo</div>
+    <div class="sacred-divider">dúvidas frequentes</div>
     <div class="faq">
       ${[
         ['Preciso ter experiência com espiritualidade?','Não. Os rituais foram criados para quem está começando. Você recebe cada passo com explicação completa do significado espiritual. O único ingrediente insubstituível é a sua intenção.'],
@@ -885,12 +1092,23 @@ function showResult(){
     </div>
 
     <div class="urgency">
-      <p>☽ &nbsp;Oferta do círculo: <strong>R$ 27</strong> por tempo limitado&nbsp; ☾<br>
-      Após encerrar, o valor retorna a <strong>R$ 67</strong></p>
+      <p>☽ &nbsp;Oferta do círculo: <strong>R$ 27</strong> por tempo limitado&nbsp; ☾</p>
+      <div id="timer-wrap" style="display:flex;justify-content:center;gap:.75rem;margin:.75rem 0">
+        <div style="text-align:center">
+          <div id="timer-min" style="font-family:'Cinzel',serif;font-size:1.8rem;color:var(--gold2);line-height:1">15</div>
+          <div style="font-family:'Cinzel',serif;font-size:.6rem;color:var(--muted);letter-spacing:2px">MIN</div>
+        </div>
+        <div style="font-family:'Cinzel',serif;font-size:1.8rem;color:var(--gold);line-height:1">:</div>
+        <div style="text-align:center">
+          <div id="timer-sec" style="font-family:'Cinzel',serif;font-size:1.8rem;color:var(--gold2);line-height:1">00</div>
+          <div style="font-family:'Cinzel',serif;font-size:.6rem;color:var(--muted);letter-spacing:2px">SEG</div>
+        </div>
+      </div>
+      <p style="font-size:.8rem;color:var(--muted-light);font-style:italic">Após encerrar, o valor retorna a R$ 67</p>
     </div>
 
-    <a class="cta-btn" href="https://pay.cakto.com.br/32eamuv_885894" target="_blank">Sim — quero transformar meu destino amoroso ✦</a>
-    <p class="cta-sub" style="margin-bottom:2rem">Pagamento seguro · Cartão, Pix ou boleto</p>
+    <a class="cta-btn" id="cta-second" href="https://pay.cakto.com.br/32eamuv_885894" target="_blank">Sim — quero transformar meu destino amoroso ✦</a>
+    
 
     <div class="closing">
       <p>☽ &nbsp; Com luz, amor e intenção &nbsp; ☾<br>
